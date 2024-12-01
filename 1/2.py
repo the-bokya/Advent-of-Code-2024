@@ -15,5 +15,5 @@ a_c, b_c = Counter(a), Counter(b)
 count = 0
 
 for x in a_c:
-    count += x * b_c[x]
+    count += x * a_c[x] * b_c[x]
 print(count)
