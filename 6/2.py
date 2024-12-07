@@ -51,7 +51,7 @@ iterated = 0
 for i, j in visited:
     iterated += 1
     if iterated % 10 == 0:
-        print(f"{iterated/len(visited) * 100}% complete")
+        print(f"{iterated/len(visited) * 100:.2f}% complete")
     ai, aj = start
     bi, bj = start
 
