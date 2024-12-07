@@ -33,10 +33,10 @@ def step(i, j, di, dj, visited=None, obstacle=(100000, 100000)):
         return i, j, di, dj, True
     if j == 0 or j == b-1:
         return i, j, di, dj, True
-    for _ in range(2):
-        if grid[i+di][j+dj] == "#" or (i+di, j+dj) == obstacle:
-            di, dj = turn(di, dj)
-    i, j = i+di, j+dj
+    if grid[i+di][j+dj] == "#" or (i+di, j+dj) == obstacle:
+        di, dj = turn(di, dj)
+    else:
+        i, j = i+di, j+dj
     return i, j, di, dj, False
 
 
