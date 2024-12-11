@@ -1,5 +1,8 @@
+from collections import Counter
+from functools import cache
 stones = [int(i) for i in input().split()]
 
+@cache
 def stoner(stone):
     if stone == 0:
         return [1]
@@ -9,11 +12,14 @@ def stoner(stone):
         return [int(stonestr[:l//2]), int(stonestr[l//2:])]
     return [stone * 2024]
 
-current = stones.copy()
+current = Counter(stones)
 for i in range(25):
-    new_stones = []
-    for stone in current:
-        new_stones.extend(stoner(stone))
+    new_stones = Counter()
+    for stone in current.keys():
+        for new_stone in stoner(stone):
+            new_stones[new_stone] += current[stone]
     current = new_stones
-
-print(len(current))
+count = 0
+for k in current:
+    count += current[k]
+print(count)
