@@ -16,7 +16,10 @@ while True:
         break
 
 qs = [0, 0, 0, 0]
+found = False
 for second in range(10000):
+    if found:
+        break
     grid = [[" " for j in range(b)] for i in range(l)]
     for robot in robots:
         x, y, vx, vy = robot
@@ -30,6 +33,7 @@ for second in range(10000):
 
         # after finding the tree ascii art, it's clear we're looking for many adjacent "#"s
         if "#########" in s:
+            found = True
             print(second)
             break
         if print_mode:
