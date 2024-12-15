@@ -97,7 +97,7 @@ for instruction in instructions:
         elif get_obstacle_hor(i+di, j+dj):
             continue
     else:
-        if get_box_vert(i+di, j+dj):
+        if get_box_vert(i+di, j+dj, box=False):
             bxs = get_box_vert(i+di, j+dj, box=False)
         elif get_obstacle_vert(i+di, j+dj, box=False):
             continue
@@ -111,12 +111,10 @@ for instruction in instructions:
     elif len(bxs) == 0:
         i += di
         j += dj
-    if (i, j) in obstacles:
-        i -= di
-        j -= dj
-    if print_mode or 610 <= ic_count <= 650:
+    if print_mode:
+        os.system("clear")
         grid = [["." for j in range(b)] for i in range(l)]
-        #print(instruction, i, j)
+        print(f"{ic_count/len(instructions)*100:.2f}% complete")
         for box in boxes:
             ci, cj = box
             grid[ci][cj] = "["
@@ -127,6 +125,7 @@ for instruction in instructions:
         grid[i][j] = "@"
         for row in grid:
             print("".join(row))
+        time.sleep(0.01)
 
 count = 0
 for box in boxes:
