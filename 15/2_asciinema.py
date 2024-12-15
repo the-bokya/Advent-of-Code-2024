@@ -112,7 +112,7 @@ for instruction in instructions:
         i += di
         j += dj
     out_string = ""
-    if print_mode:
+    if print_mode and ic_count % 10 == 0:
         grid = [["." for j in range(b)] for i in range(l)]
         for box in boxes:
             ci, cj = box
@@ -125,10 +125,9 @@ for instruction in instructions:
         for row in grid:
             out_string += "".join(row)
             out_string += """\\r\\n"""
-        print(f'[{ic_count/len(instructions)*100}, "o", "\\u001b[2J\\r\\u001b[32m"]')
-        print(f'[{ic_count/len(instructions)*100}, "o", "{ic_count/len(instructions)*100:.2f}% complete\\r\\n"]')
-        print(f'[{ic_count/len(instructions)*100}, "o", "{out_string}"]')
+        print(f'[{ic_count/len(instructions)*10}, "o", "\\u001b[2J\\r\\u001b[32m"]')
+        print(f'[{ic_count/len(instructions)*10}, "o", "{ic_count/len(instructions)*100:.2f}% complete\\r\\n"]')
+        print(f'[{ic_count/len(instructions)*10}, "o", "{out_string}"]')
 count = 0
 for box in boxes:
     count += box[0]*100 + box[1]
-print(count)
