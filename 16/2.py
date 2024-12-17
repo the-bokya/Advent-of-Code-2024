@@ -25,10 +25,10 @@ while len(queue):
     #print(len(queue))
     if dist > count:
         continue
-    if (i, j) in visited:
-        if (visited[(i, j)]+1000) < dist:
+    if (i, j, dxi, dxj) in visited:
+        if (visited[(i, j, dxi, dxj)]) < dist:
             continue
-    visited[(i, j)] = dist
+    visited[(i, j, dxi, dxj)] = dist
     for di, dj in ((-1, 0), (1, 0), (0, 1), (0, -1)):
         ci, cj = i+di, j+dj
         if (di, dj) == (-dxi, -dxj):
