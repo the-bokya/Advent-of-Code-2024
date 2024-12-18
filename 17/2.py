@@ -1,15 +1,12 @@
 import re
-"""
 oA = int(re.findall("[0-9]+", input())[0])
 oB = int(re.findall("[0-9]+", input())[0])
 oC = int(re.findall("[0-9]+", input())[0])
 input()
-"""
-#ops = [int(i) for i in re.findall("[0-9]+", input())]
-ops = [2,4,1,1,7,5,1,4,0,3,4,5,5,5,3,0]
+ops = [int(i) for i in re.findall("[0-9]+", input())]
 class Comp:
     def __init__(self, A):
-        self.ops = [2,4,1,1,7,5,1,4,0,3,4,5,5,5,3,0]
+        self.ops = ops
         self.digit_matches = []
         self.A = A
         self.B = 0
