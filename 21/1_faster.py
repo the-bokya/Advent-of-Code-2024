@@ -18,7 +18,7 @@ for idx, i in enumerate(dir_keypad):
         dir_map[j] = (idx, jdx)
 
 print(dir_map)
-@cache
+
 def dir_dir_move(a, b):
     si, sj = a
     ei, ej = b
@@ -57,7 +57,6 @@ def dir_dir_move(a, b):
             queue.append((output+h, (ci, cj+dj)))
     return outs
 
-@cache
 def num_dir_move(a, b):
     si, sj = a
     ei, ej = b
@@ -113,23 +112,25 @@ def num_to_dir(nums):
 @cache
 def minimise(ls, n=25):
     if n == 0:
-        return min(ls, key=len)
+        return min([len(l) for l in ls])
     outs = []
     for ldx, l in enumerate(ls):
-        out = ""
+        out = 0
         current = "A"
         for letter in l:
             out += minimise(tuple(dir_dir_move(dir_map[current], dir_map[letter])), n-1)
-            out += "A"
+            out += 1
             current = letter
         out += minimise(tuple(dir_dir_move(dir_map[current], dir_map["A"])), n-1)
         outs.append(out)
-    return min(outs, key=len)
+    return min(outs)
 count = 0
 print(count, args)
 for arg in args:
-    print(count, arg)
     x = minimise(num_to_dir(arg), n=2)
     #print(x)
-    count += len(x) * int(re.findall("[0-9]+", arg)[0])
+    minimise.cache_clear()
+    count += x * int(re.findall("[0-9]+", arg)[0])
+    print(minimise.cache_info())
+    print(count, arg)
 print(count)
