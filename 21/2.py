@@ -125,7 +125,6 @@ def minimise(ls, n=25):
     return min(outs)
 count = 0
 for arg in args:
-    x = minimise(num_to_dir(arg), n=2)
-    minimise.cache_clear()
+    x = minimise(num_to_dir(arg), n=25)
     count += x * int(re.findall("[0-9]+", arg)[0])
 print(count)
