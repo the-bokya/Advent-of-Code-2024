@@ -55,6 +55,7 @@ func part1(nums []int) (count int) {
 }
 
 func part2(nums []int) int {
+	divisions := 5 // max simultaneous Counter addition goroutines at each momet
 	pmap := make(chan Counter)
 	for _, num := range nums {
 		go func() {
@@ -75,17 +76,21 @@ func part2(nums []int) int {
 	var wg sync.WaitGroup
 	for len(pmaps) > 1 {
 		//fmt.Println(len(pmaps))
-		nexts := make(chan Counter, (len(pmaps)+1)/2)
-		for idx := range (len(pmaps) + 1) / 2 {
+		nexts := make(chan Counter, (len(pmaps)-1+divisions)/divisions)
+		for idx := range (len(pmaps) - 1 + divisions) / divisions {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
-				a := pmaps[idx*2]
+				a := pmaps[idx*divisions]
 				//fmt.Println(idx, len(pmaps))
-				if idx*2+1 < len(pmaps) {
-					b := pmaps[idx*2+1]
-					//fmt.Println(len(a), len(pmaps))
-					a.Add(b)
+				for jdx := range divisions - 1 {
+					if idx*divisions+jdx+1 < len(pmaps) {
+						b := pmaps[idx*divisions+jdx+1]
+						//fmt.Println(len(a), len(pmaps))
+						a.Add(b)
+					} else {
+						break
+					}
 				}
 				nexts <- a
 			}()
