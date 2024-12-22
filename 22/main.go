@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"sync"
 )
 
 type Counter map[int]int
@@ -54,14 +55,54 @@ func part1(nums []int) (count int) {
 }
 
 func part2(nums []int) int {
-	counter := make(Counter)
+	pmap := make(chan Counter)
 	for _, num := range nums {
-		seq := genSecretSequence(num, 2000)
-		prices := genPrices(num, seq)
-		pmap := priceRangeMap(prices)
-		counter.Add(pmap)
+		go func() {
+			seq := genSecretSequence(num, 2000)
+			prices := genPrices(num, seq)
+			pmap <- priceRangeMap(prices)
+		}()
 	}
 	out := 0
+	pmaps := make([]Counter, 0)
+	for range len(nums) {
+		select {
+		case pmapCurrent := <-pmap:
+			pmaps = append(pmaps, pmapCurrent)
+		}
+	}
+	close(pmap)
+	var wg sync.WaitGroup
+	for len(pmaps) > 1 {
+		//fmt.Println(len(pmaps))
+		nexts := make(chan Counter, (len(pmaps)+1)/2)
+		for idx := range (len(pmaps) + 1) / 2 {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				a := pmaps[idx*2]
+				//fmt.Println(idx, len(pmaps))
+				if idx*2+1 < len(pmaps) {
+					b := pmaps[idx*2+1]
+					//fmt.Println(len(a), len(pmaps))
+					a.Add(b)
+				}
+				nexts <- a
+			}()
+		}
+		nextPmaps := make([]Counter, 0)
+		wg.Wait()
+		close(nexts)
+		for {
+			pmapCurrent, more := <-nexts
+			if !more {
+				break
+			}
+			nextPmaps = append(nextPmaps, pmapCurrent)
+		}
+		pmaps = nextPmaps
+	}
+	counter := pmaps[0]
 	for _, v := range counter {
 		out = max(out, v)
 	}
